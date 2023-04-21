@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="referrer" content="no-referrer">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kael">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Docker Compse 部署 Seata 环境准备 本次部署是基于 Nacos 搭建 Seata 服务，因此在安装 Seata 之前，需要先准备好 Nacos 服务器。   拉取镜像 1docker pull seataio&#x2F;seata-server:1.3.0  启动临时容器 1docker run --name temp-seata-server -p 8091:8091 seataio&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Compse 部署 Seata">
+<meta property="og:url" content="https://kael.52dev.fun/2023/04/19/Docker%20Compse%20%E9%83%A8%E7%BD%B2%20Seata/index.html">
+<meta property="og:site_name" content="码农笔记">
+<meta property="og:description" content="Docker Compse 部署 Seata 环境准备 本次部署是基于 Nacos 搭建 Seata 服务，因此在安装 Seata 之前，需要先准备好 Nacos 服务器。   拉取镜像 1docker pull seataio&#x2F;seata-server:1.3.0  启动临时容器 1docker run --name temp-seata-server -p 8091:8091 seataio&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304210947138.png">
+<meta property="article:published_time" content="2023-04-19T08:31:38.000Z">
+<meta property="article:modified_time" content="2023-04-21T01:56:34.036Z">
+<meta property="article:author" content="Kael">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304210947138.png">
+  
+  
+  
+  <title>Docker Compse 部署 Seata - 码农笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kael.52dev.fun","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>码农笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Docker Compse 部署 Seata"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-19 16:31" pubdate>
+          2023年4月19日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          85 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Docker Compse 部署 Seata</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Docker-Compse-部署-Seata"><a href="#Docker-Compse-部署-Seata" class="headerlink" title="Docker Compse 部署 Seata"></a>Docker Compse 部署 Seata</h1><p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304210947138.png" srcset="/img/loading.gif" lazyload alt="Seata"></p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><blockquote>
+<p>本次部署是基于 Nacos 搭建 Seata 服务，因此在安装 Seata 之前，需要先准备好 Nacos 服务器。</p>
+</blockquote>
+<ol>
+<li><p>拉取镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker pull seataio/seata-server:1.3.0<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>启动临时容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run --name temp-seata-server -p 8091:8091 seataio/seata-server:1.3.0<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>查看容器ID</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker ps -a<br></code></pre></td></tr></table></figure>
+
+<p>找到刚才启动的容器，复制容器ID。</p>
+</li>
+<li><p>导出Seata配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">创建配置文件保存目录</span><br>mkdir -p /home/seata-config<br><span class="hljs-meta prompt_"># </span><span class="language-bash">复制配置文件到目标目录</span><br>docker cp &lt;容器ID&gt;:/seata-server/resources/* /home/seata-config<br></code></pre></td></tr></table></figure>
+
+<p>复制完成后，就可以删除掉临时容器了。</p>
+</li>
+<li><p>准备数据库</p>
+<p>下载Seata源代码，地址：<a target="_blank" rel="noopener" href="https://github.com/seata/seata/archive/refs/tags/v1.3.0.zip">https://github.com/seata/seata/archive/refs/tags/v1.3.0.zip</a></p>
+<p>找到源码目录的<code>script/server/db/mysql</code>脚本文件，使用脚本创建数据库。创建表之前先创建一个<code>seata-db</code>的数据库。</p>
+<p>脚本文件</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- -------------------------------- The script used when storeMode is &#x27;db&#x27; --------------------------------</span><br><span class="hljs-comment">-- the table to store GlobalSession data</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> `global_table`<br>(<br>    `xid`                       <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    `transaction_id`            <span class="hljs-type">BIGINT</span>,<br>    `status`                    TINYINT      <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    `application_id`            <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>),<br>    `transaction_service_group` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>),<br>    `transaction_name`          <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">128</span>),<br>    `timeout`                   <span class="hljs-type">INT</span>,<br>    `begin_time`                <span class="hljs-type">BIGINT</span>,<br>    `application_data`          <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">2000</span>),<br>    `gmt_create`                DATETIME,<br>    `gmt_modified`              DATETIME,<br>    <span class="hljs-keyword">PRIMARY</span> KEY (`xid`),<br>    KEY `idx_gmt_modified_status` (`gmt_modified`, `status`),<br>    KEY `idx_transaction_id` (`transaction_id`)<br>) ENGINE <span class="hljs-operator">=</span> InnoDB<br>  <span class="hljs-keyword">DEFAULT</span> CHARSET <span class="hljs-operator">=</span> utf8;<br><br><span class="hljs-comment">-- the table to store BranchSession data</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> `branch_table`<br>(<br>    `branch_id`         <span class="hljs-type">BIGINT</span>       <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    `xid`               <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    `transaction_id`    <span class="hljs-type">BIGINT</span>,<br>    `resource_group_id` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>),<br>    `resource_id`       <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">256</span>),<br>    `branch_type`       <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">8</span>),<br>    `status`            TINYINT,<br>    `client_id`         <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">64</span>),<br>    `application_data`  <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">2000</span>),<br>    `gmt_create`        DATETIME(<span class="hljs-number">6</span>),<br>    `gmt_modified`      DATETIME(<span class="hljs-number">6</span>),<br>    <span class="hljs-keyword">PRIMARY</span> KEY (`branch_id`),<br>    KEY `idx_xid` (`xid`)<br>) ENGINE <span class="hljs-operator">=</span> InnoDB<br>  <span class="hljs-keyword">DEFAULT</span> CHARSET <span class="hljs-operator">=</span> utf8;<br><br><span class="hljs-comment">-- the table to store lock data</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> `lock_table`<br>(<br>    `row_key`        <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    `xid`            <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">96</span>),<br>    `transaction_id` <span class="hljs-type">BIGINT</span>,<br>    `branch_id`      <span class="hljs-type">BIGINT</span>       <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    `resource_id`    <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">256</span>),<br>    `table_name`     <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>),<br>    `pk`             <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">36</span>),<br>    `gmt_create`     DATETIME,<br>    `gmt_modified`   DATETIME,<br>    <span class="hljs-keyword">PRIMARY</span> KEY (`row_key`),<br>    KEY `idx_branch_id` (`branch_id`)<br>) ENGINE <span class="hljs-operator">=</span> InnoDB<br>  <span class="hljs-keyword">DEFAULT</span> CHARSET <span class="hljs-operator">=</span> utf8;<br></code></pre></td></tr></table></figure>
+
+<p>上面的脚本会创建出三个表，这三个表是Seata控制事务时必须的三张表。</p>
+</li>
+</ol>
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><blockquote>
+<p>从Docker容器导出的配置文件很多，我们主要修改两个配置<code>file.conf</code>和<code>registry.conf</code>。</p>
+</blockquote>
+<p><code>file.conf</code>：事务日志存储配置</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs text"><br>## transaction log store, only used in seata-server<br>store &#123;<br>  ## store mode: file、db、redis<br>  mode = &quot;db&quot;<br><br>  ## file store property<br>  file &#123;<br>    ## store location dir<br>    dir = &quot;sessionStore&quot;<br>    # branch session size , if exceeded first try compress lockkey, still exceeded throws exceptions<br>    maxBranchSessionSize = 16384<br>    # globe session size , if exceeded throws exceptions<br>    maxGlobalSessionSize = 512<br>    # file buffer size , if exceeded allocate new buffer<br>    fileWriteBufferCacheSize = 16384<br>    # when recover batch read size<br>    sessionReloadReadSize = 100<br>    # async, sync<br>    flushDiskMode = async<br>  &#125;<br><br>  ## database store property<br>  db &#123;<br>    ## the implement of javax.sql.DataSource, such as DruidDataSource(druid)/BasicDataSource(dbcp)/HikariDataSource(hikari) etc.<br>    datasource = &quot;druid&quot;<br>    ## mysql/oracle/postgresql/h2/oceanbase etc.<br>    dbType = &quot;mysql&quot;<br>    driverClassName = &quot;com.mysql.cj.jdbc.Driver&quot;<br>    url = &quot;jdbc:mysql://172.16.3.36:3306/seata-db?useUnicode=true&amp;characterEncoding=UTF-8&amp;useCompression=true&amp;rewriteBatchedStatements=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&quot;<br>    user = &quot;root&quot;<br>    password = &quot;admin123&quot;<br>    minConn = 5<br>    maxConn = 30<br>    globalTable = &quot;global_table&quot;<br>    branchTable = &quot;branch_table&quot;<br>    lockTable = &quot;lock_table&quot;<br>    queryLimit = 100<br>    maxWait = 5000<br>  &#125;<br><br>  ## redis store property<br>  redis &#123;<br>    host = &quot;127.0.0.1&quot;<br>    port = &quot;6379&quot;<br>    password = &quot;&quot;<br>    database = &quot;0&quot;<br>    minConn = 1<br>    maxConn = 10<br>    queryLimit = 100<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>重点是 store.mode和store.db。</p>
+<p><code>registry.conf</code>：服务注册发现配置</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><code class="hljs text">registry &#123;<br>  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa<br>  type = &quot;nacos&quot;<br><br>  nacos &#123;<br>    application = &quot;seata-server&quot;<br>    serverAddr = &quot;172.16.3.2&quot;<br>    group = &quot;SEATA_GROUP&quot;<br>    namespace = &quot;b1d472f3-5672-4af3-a222-c312f157858a&quot;<br>    cluster = &quot;default&quot;<br>    username = &quot;nacos&quot;<br>    password = &quot;nacos&quot;<br>  &#125;<br>  eureka &#123;<br>    serviceUrl = &quot;http://localhost:8761/eureka&quot;<br>    application = &quot;default&quot;<br>    weight = &quot;1&quot;<br>  &#125;<br>  redis &#123;<br>    serverAddr = &quot;localhost:6379&quot;<br>    db = 0<br>    password = &quot;&quot;<br>    cluster = &quot;default&quot;<br>    timeout = 0<br>  &#125;<br>  zk &#123;<br>    cluster = &quot;default&quot;<br>    serverAddr = &quot;127.0.0.1:2181&quot;<br>    sessionTimeout = 6000<br>    connectTimeout = 2000<br>    username = &quot;&quot;<br>    password = &quot;&quot;<br>  &#125;<br>  consul &#123;<br>    cluster = &quot;default&quot;<br>    serverAddr = &quot;127.0.0.1:8500&quot;<br>  &#125;<br>  etcd3 &#123;<br>    cluster = &quot;default&quot;<br>    serverAddr = &quot;http://localhost:2379&quot;<br>  &#125;<br>  sofa &#123;<br>    serverAddr = &quot;127.0.0.1:9603&quot;<br>    application = &quot;default&quot;<br>    region = &quot;DEFAULT_ZONE&quot;<br>    datacenter = &quot;DefaultDataCenter&quot;<br>    cluster = &quot;default&quot;<br>    group = &quot;SEATA_GROUP&quot;<br>    addressWaitTime = &quot;3000&quot;<br>  &#125;<br>  file &#123;<br>    name = &quot;file.conf&quot;<br>  &#125;<br>&#125;<br><br>config &#123;<br>  # file、nacos 、apollo、zk、consul、etcd3<br>  type = &quot;nacos&quot;<br><br>  nacos &#123;<br>    serverAddr = &quot;172.16.3.2&quot;<br>    namespace = &quot;b1d472f3-5672-4af3-a222-c312f157858a&quot;<br>    group = &quot;SEATA_GROUP&quot;<br>    username = &quot;nacos&quot;<br>    password = &quot;nacos&quot;<br>  &#125;<br>  consul &#123;<br>    serverAddr = &quot;127.0.0.1:8500&quot;<br>  &#125;<br>  apollo &#123;<br>    appId = &quot;seata-server&quot;<br>    apolloMeta = &quot;http://192.168.1.204:8801&quot;<br>    namespace = &quot;application&quot;<br>  &#125;<br>  zk &#123;<br>    serverAddr = &quot;127.0.0.1:2181&quot;<br>    sessionTimeout = 6000<br>    connectTimeout = 2000<br>    username = &quot;&quot;<br>    password = &quot;&quot;<br>  &#125;<br>  etcd3 &#123;<br>    serverAddr = &quot;http://localhost:2379&quot;<br>  &#125;<br>  file &#123;<br>    name = &quot;file.conf&quot;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>重点是registry.type、registry.nacos、config.type、config.nacos。</p>
+<h2 id="初始化配置中心"><a href="#初始化配置中心" class="headerlink" title="初始化配置中心"></a>初始化配置中心</h2><blockquote>
+<p>这一步的目的是将客户端与服务端共享的配置使用 Nacos 来管理。</p>
+</blockquote>
+<h3 id="修改配置-1"><a href="#修改配置-1" class="headerlink" title="修改配置"></a>修改配置</h3><p><code>源码目录/script/config-center/config.txt</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">transport.type</span>=TCP<br><span class="hljs-attr">transport.server</span>=NIO<br><span class="hljs-attr">transport.heartbeat</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">transport.enableClientBatchSendRequest</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">transport.threadFactory.bossThreadPrefix</span>=NettyBoss<br><span class="hljs-attr">transport.threadFactory.workerThreadPrefix</span>=NettyServerNIOWorker<br><span class="hljs-attr">transport.threadFactory.serverExecutorThreadPrefix</span>=NettyServerBizHandler<br><span class="hljs-attr">transport.threadFactory.shareBossWorker</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">transport.threadFactory.clientSelectorThreadPrefix</span>=NettyClientSelector<br><span class="hljs-attr">transport.threadFactory.clientSelectorThreadSize</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">transport.threadFactory.clientWorkerThreadPrefix</span>=NettyClientWorkerThread<br><span class="hljs-attr">transport.threadFactory.bossThreadSize</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">transport.threadFactory.workerThreadSize</span>=default<br><span class="hljs-attr">transport.shutdown.wait</span>=<span class="hljs-number">3</span><br><span class="hljs-attr">service.vgroupMapping.youzi_maill_group</span>=default<br><span class="hljs-attr">service.default.grouplist</span>=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8091</span><br><span class="hljs-attr">service.enableDegrade</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">service.disableGlobalTransaction</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">client.rm.asyncCommitBufferLimit</span>=<span class="hljs-number">10000</span><br><span class="hljs-attr">client.rm.lock.retryInterval</span>=<span class="hljs-number">10</span><br><span class="hljs-attr">client.rm.lock.retryTimes</span>=<span class="hljs-number">30</span><br><span class="hljs-attr">client.rm.lock.retryPolicyBranchRollbackOnConflict</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">client.rm.reportRetryCount</span>=<span class="hljs-number">5</span><br><span class="hljs-attr">client.rm.tableMetaCheckEnable</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">client.rm.sqlParserType</span>=druid<br><span class="hljs-attr">client.rm.reportSuccessEnable</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">client.rm.sagaBranchRegisterEnable</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">client.tm.commitRetryCount</span>=<span class="hljs-number">5</span><br><span class="hljs-attr">client.tm.rollbackRetryCount</span>=<span class="hljs-number">5</span><br><span class="hljs-attr">client.tm.degradeCheck</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">client.tm.degradeCheckAllowTimes</span>=<span class="hljs-number">10</span><br><span class="hljs-attr">client.tm.degradeCheckPeriod</span>=<span class="hljs-number">2000</span><br><span class="hljs-attr">store.mode</span>=db<br><span class="hljs-attr">store.file.dir</span>=file_store/data<br><span class="hljs-attr">store.file.maxBranchSessionSize</span>=<span class="hljs-number">16384</span><br><span class="hljs-attr">store.file.maxGlobalSessionSize</span>=<span class="hljs-number">512</span><br><span class="hljs-attr">store.file.fileWriteBufferCacheSize</span>=<span class="hljs-number">16384</span><br><span class="hljs-attr">store.file.flushDiskMode</span>=async<br><span class="hljs-attr">store.file.sessionReloadReadSize</span>=<span class="hljs-number">100</span><br><span class="hljs-attr">store.db.datasource</span>=druid<br><span class="hljs-attr">store.db.dbType</span>=mysql<br><span class="hljs-attr">store.db.driverClassName</span>=com.mysql.cj.jdbc.Driver<br><span class="hljs-attr">store.db.url</span>=jdbc:mysql://<span class="hljs-number">172.16</span>.<span class="hljs-number">3.36</span>:<span class="hljs-number">3306</span>/seata-db?useUnicode=<span class="hljs-literal">true</span>&amp;characterEncoding=UTF-<span class="hljs-number">8</span>&amp;useCompression=<span class="hljs-literal">true</span>&amp;rewriteBatchedStatements=<span class="hljs-literal">true</span>&amp;useSSL=<span class="hljs-literal">false</span>&amp;serverTimezone=Asia/Shanghai<br><span class="hljs-attr">store.db.user</span>=root<br><span class="hljs-attr">store.db.password</span>=admin123<br><span class="hljs-attr">store.db.minConn</span>=<span class="hljs-number">5</span><br><span class="hljs-attr">store.db.maxConn</span>=<span class="hljs-number">30</span><br><span class="hljs-attr">store.db.globalTable</span>=global_table<br><span class="hljs-attr">store.db.branchTable</span>=branch_table<br><span class="hljs-attr">store.db.queryLimit</span>=<span class="hljs-number">100</span><br><span class="hljs-attr">store.db.lockTable</span>=lock_table<br><span class="hljs-attr">store.db.maxWait</span>=<span class="hljs-number">5000</span><br><span class="hljs-attr">store.redis.host</span>=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span><br><span class="hljs-attr">store.redis.port</span>=<span class="hljs-number">6379</span><br><span class="hljs-attr">store.redis.maxConn</span>=<span class="hljs-number">10</span><br><span class="hljs-attr">store.redis.minConn</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">store.redis.database</span>=<span class="hljs-number">0</span><br><span class="hljs-attr">store.redis.password</span>=null<br><span class="hljs-attr">store.redis.queryLimit</span>=<span class="hljs-number">100</span><br><span class="hljs-attr">server.recovery.committingRetryPeriod</span>=<span class="hljs-number">1000</span><br><span class="hljs-attr">server.recovery.asynCommittingRetryPeriod</span>=<span class="hljs-number">1000</span><br><span class="hljs-attr">server.recovery.rollbackingRetryPeriod</span>=<span class="hljs-number">1000</span><br><span class="hljs-attr">server.recovery.timeoutRetryPeriod</span>=<span class="hljs-number">1000</span><br><span class="hljs-attr">server.maxCommitRetryTimeout</span>=-<span class="hljs-number">1</span><br><span class="hljs-attr">server.maxRollbackRetryTimeout</span>=-<span class="hljs-number">1</span><br><span class="hljs-attr">server.rollbackRetryTimeoutUnlockEnable</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">client.undo.dataValidation</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">client.undo.logSerialization</span>=jackson<br><span class="hljs-attr">client.undo.onlyCareUpdateColumns</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">server.undo.logSaveDays</span>=<span class="hljs-number">7</span><br><span class="hljs-attr">server.undo.logDeletePeriod</span>=<span class="hljs-number">86400000</span><br><span class="hljs-attr">client.undo.logTable</span>=undo_log<br><span class="hljs-attr">client.log.exceptionRate</span>=<span class="hljs-number">100</span><br><span class="hljs-attr">transport.serialization</span>=seata<br><span class="hljs-attr">transport.compressor</span>=none<br><span class="hljs-attr">metrics.enabled</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">metrics.registryType</span>=compact<br><span class="hljs-attr">metrics.exporterList</span>=prometheus<br><span class="hljs-attr">metrics.exporterPrometheusPort</span>=<span class="hljs-number">9898</span><br></code></pre></td></tr></table></figure>
+
+<p>重点关注的配置：</p>
+<ul>
+<li>service.vgroupMapping.&lt;分组名称&gt;&#x3D;default：配置事务分组，重点是分组名称，Seta通过此名称进行事务编组。如果有多个组，则多复制几行，改一下组名即可。这个组名会在微服务配置中体现。default是集群名称，对应的是Seata Server 的<code>registry.conf</code>配置文件中的<code>registry.nacos.cluster</code>配置的值。</li>
+<li>service.default.grouplist&#x3D;<IP>:&lt;端口号&gt;：Seata Server集群地址和端口列表。</IP></li>
+<li>store.db.datasource：使用哪个连接池组件。</li>
+<li>store.db.dbType：使用哪种数据库</li>
+<li>store.db.driverClassName&#x3D;com.mysql.cj.jdbc.Driver：数据库驱动</li>
+<li>store.db.url：数据库连接地址</li>
+<li>store.db.user：数据库账号</li>
+<li>store.db.password：数据库密码</li>
+<li>store.db.globalTable：全局表，对应前面创建的表名。</li>
+<li>store.db.branchTable：事务分支表，对应前面创建的表名。</li>
+<li>store.db.lockTable：事务锁表，对应前面创建的表名。</li>
+</ul>
+<p>其他配置默认即可，如果有场景需要，也可以自行配置。配置方法可以参阅官方文档说明。</p>
+<h3 id="初始化配置到-Nacos"><a href="#初始化配置到-Nacos" class="headerlink" title="初始化配置到 Nacos"></a>初始化配置到 Nacos</h3><blockquote>
+<p>编写完配置之后，可以使用源码中的脚本将配置写入到 Nacos 中，这样 Seata 的服务端和客户端就可以共享配置了。</p>
+</blockquote>
+<p>脚本位置：<code>源码目录/script/config-center/nacos/nacos-config.sh</code></p>
+<p>执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">进入目录后执行</span><br>sh nacos-config.sh -h 172.16.3.2 -p 80 -g SEATA_GROUP -t b1d472f3-5672-4af3-a222-c312f157858a -u nacos -w nacos<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>-h：Nacos服务器地址。</li>
+<li>-p：Nacos服务器端口。</li>
+<li>-g：Nacos配置文件组名。</li>
+<li>-t：Nacos配置中心命名空间。</li>
+<li>-u：Nacos账号。</li>
+<li>-w：Nacos密码。</li>
+</ul>
+<p>执行完命令，会在控制台看到一堆的写入日志。此时打开Nacos控制台，找到配置中心，刷新就可以看到刚才写入的配置了。</p>
+<h2 id="Seata服务的编排与部署"><a href="#Seata服务的编排与部署" class="headerlink" title="Seata服务的编排与部署"></a>Seata服务的编排与部署</h2><p>编排文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;3.1&quot;</span><br><br><span class="hljs-attr">services:</span><br><br>  <span class="hljs-attr">seata-server:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">seataio/seata-server:1.3.0</span><br>    <span class="hljs-attr">hostname:</span> <span class="hljs-string">seata-server</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">seata-server</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">8091</span><span class="hljs-string">:8091</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SEATA_IP=172.16.3.3</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SEATA_PORT=8091</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/home/seata-config/resources:/seata-server/resources</span><br>    <span class="hljs-attr">expose:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">8091</span><br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>环境变量 SEATA_IP</code>和<code>volumes</code>要注意，按照自己的实际情况去填写。</p>
+<p>编写完服务编排之后，就可以启动服务了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker-compose -f &lt;编排文件路径&gt; up -d<br></code></pre></td></tr></table></figure>
+
+<p>启动完成后，查看容器日志，没有报错信息即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker logs -f &lt;容器ID&gt;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Docker/" class="category-chain-item">Docker</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Docker/">#Docker</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Docker Compse 部署 Seata</div>
+      <div>https://kael.52dev.fun/2023/04/19/Docker Compse 部署 Seata/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kael</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              BY (KAEL)
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/19/%E4%BD%BF%E7%94%A8Harbor%E6%90%AD%E5%BB%BADocker%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" title="使用Harbor搭建Docker私有仓库">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">使用Harbor搭建Docker私有仓库</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/19/DockerCompose%E9%83%A8%E7%BD%B2Nacos%E9%9B%86%E7%BE%A4/" title="Docker Compose 部署 Nacos 集群">
+                        <span class="hidden-mobile">Docker Compose 部署 Nacos 集群</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div><b>码农卡尔的笔记</b></div> <div>联系邮箱: kael3805@gmail.com</div> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -26,7 +26,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304201146594.png">
 <meta property="article:published_time" content="2023-04-20T04:46:25.000Z">
-<meta property="article:modified_time" content="2023-04-20T06:04:07.847Z">
+<meta property="article:modified_time" content="2023-04-21T01:38:33.489Z">
 <meta property="article:author" content="Kael">
 <meta property="article:tag" content="Hexo">
 <meta property="article:tag" content="个人博客搭建">
@@ -337,27 +337,27 @@
 <p>Yarn 安装命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">yarn install -g hexo-cli<br></code></pre></td></tr></table></figure>
 
-<p><em><strong>注意：由于网络环境的问题，中国大陆访问官方仓库比较慢，想要提速就需要科学上网。因此，我们需要将 npm 或 yarn 的镜像源改成国内镜像源。修改方法可以自己去查询相关资料。</strong></em></p>
+<p><strong><em>注意：由于网络环境的问题，中国大陆访问官方仓库比较慢，想要提速就需要科学上网。因此，我们需要将 npm 或 yarn 的镜像源改成国内镜像源。修改方法可以自己去查询相关资料。</em></strong></p>
 <p>Hexo 客户端的安装非常简单，一行命令就搞定了。</p>
 <h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><blockquote>
 <p>注意：如果你给全局的<code>node_modules</code>目录设置过环境变量，那么可以直接使用<code>hexo</code>命令，否则可以在命令前面加上<code>npx</code>。最好的办法就是在命令终端输入<code>hexo</code>，看看能不能找到命令，如果不行就使用<code>npx hexo</code>。</p>
 </blockquote>
 <ol>
 <li><p>新建博客项目的目录</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">mkdir -p &lt;目录名&gt;<br></code></pre></td></tr></table></figure>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">mkdir -p &lt;目录名&gt;<br></code></pre></td></tr></table></figure>
 
-<p><code>-p</code> 的作用是如果没有则新建一个目录，比如我们创建目录的命令是<code>mkdir -p ~/blog/github</code>，如果<code>blog</code>目录不存在，则会新建。</p>
-<p>如果你使用的是 Windows 系统，可以手动创建目录，也可以使用 <code>Git Bash</code> 命令窗口。<code>Git Bash</code>命令窗口中可以使用 Linux 命令。</p>
+<p> <code>-p</code> 的作用是如果没有则新建一个目录，比如我们创建目录的命令是<code>mkdir -p ~/blog/github</code>，如果<code>blog</code>目录不存在，则会新建。</p>
+<p> 如果你使用的是 Windows 系统，可以手动创建目录，也可以使用 <code>Git Bash</code> 命令窗口。<code>Git Bash</code>命令窗口中可以使用 Linux 命令。</p>
 </li>
 <li><p>使用 hexo 初始化项目</p>
-<p>我这里创建了一个<code>hexo-demo</code>作为项目目录。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">进入目录</span><br>cd hexo-demo<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">初始化项目</span><br>hexo init<br></code></pre></td></tr></table></figure>
+<p> 我这里创建了一个<code>hexo-demo</code>作为项目目录。</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">进入目录</span><br>cd hexo-demo<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">初始化项目</span><br>hexo init<br></code></pre></td></tr></table></figure>
 
-<p>初始化时会提示以下信息</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-comment">-- console log --</span><br><span class="hljs-keyword">INFO</span>  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git<br><span class="hljs-keyword">INFO</span>  Install dependencies<br><span class="hljs-built_in">warning</span> hexo &gt; warehouse &gt; cuid@<span class="hljs-number">2.1</span><span class="hljs-number">.8</span>: Cuid <span class="hljs-keyword">and</span> other k-sortable <span class="hljs-keyword">and</span> non-cryptographic ids (Ulid, ObjectId, KSUID, <span class="hljs-keyword">all</span> UUIDs) are <span class="hljs-keyword">all</span> insecure. Use @paralleldrive/cuid2 <span class="hljs-keyword">instead</span>.<br><span class="hljs-built_in">warning</span> hexo-renderer-stylus &gt; stylus &gt; css &gt; source-map-resolve@<span class="hljs-number">0.6</span><span class="hljs-number">.0</span>: See https://github.com/lydell/source-map-resolve#deprecated<br><span class="hljs-keyword">INFO</span>  <span class="hljs-keyword">Start</span> blogging <span class="hljs-keyword">with</span> Hexo!<br></code></pre></td></tr></table></figure>
+<p> 初始化时会提示以下信息</p>
+ <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-comment">-- console log --</span><br><span class="hljs-keyword">INFO</span>  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git<br><span class="hljs-keyword">INFO</span>  Install dependencies<br><span class="hljs-built_in">warning</span> hexo &gt; warehouse &gt; cuid@<span class="hljs-number">2.1</span><span class="hljs-number">.8</span>: Cuid <span class="hljs-keyword">and</span> other k-sortable <span class="hljs-keyword">and</span> non-cryptographic ids (Ulid, ObjectId, KSUID, <span class="hljs-keyword">all</span> UUIDs) are <span class="hljs-keyword">all</span> insecure. Use @paralleldrive/cuid2 <span class="hljs-keyword">instead</span>.<br><span class="hljs-built_in">warning</span> hexo-renderer-stylus &gt; stylus &gt; css &gt; source-map-resolve@<span class="hljs-number">0.6</span><span class="hljs-number">.0</span>: See https://github.com/lydell/source-map-resolve#deprecated<br><span class="hljs-keyword">INFO</span>  <span class="hljs-keyword">Start</span> blogging <span class="hljs-keyword">with</span> Hexo!<br></code></pre></td></tr></table></figure>
 
-<p>信息中出现了两个警告，可以不用管他，不影响使用。</p>
-<p>初始化完成后，我们使用 <code>ls</code> 命令或打开目录查看，会看到下面这些文件：</p>
+<p> 信息中出现了两个警告，可以不用管他，不影响使用。</p>
+<p> 初始化完成后，我们使用 <code>ls</code> 命令或打开目录查看，会看到下面这些文件：</p>
 <table>
 <thead>
 <tr>
@@ -396,13 +396,13 @@
 </tbody></table>
 </li>
 <li><p>启动项目</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo server --debug<br></code></pre></td></tr></table></figure>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo server --debug<br></code></pre></td></tr></table></figure>
 
-<p>启动成功后，会在下方看到这样一条日志</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">03</span>:<span class="hljs-number">43</span>:<span class="hljs-number">26</span>.<span class="hljs-number">937</span> INFO  Hexo is running at http://localhost:<span class="hljs-number">4000</span>/ . Press Ctrl+C to stop.<br></code></pre></td></tr></table></figure>
+<p> 启动成功后，会在下方看到这样一条日志</p>
+ <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">03</span>:<span class="hljs-number">43</span>:<span class="hljs-number">26</span>.<span class="hljs-number">937</span> INFO  Hexo is running at http://localhost:<span class="hljs-number">4000</span>/ . Press Ctrl+C to stop.<br></code></pre></td></tr></table></figure>
 
-<p>我们可以使用浏览器访问<code>http://localhost:4000/</code>来查看我们的博客。如图：</p>
-<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304201146594.png" srcset="/img/loading.gif" lazyload alt="image-20230420114650486"></p>
+<p> 我们可以使用浏览器访问<code>http://localhost:4000/</code>来查看我们的博客。如图：</p>
+<p> <img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304201146594.png" srcset="/img/loading.gif" lazyload alt="image-20230420114650486"></p>
 </li>
 </ol>
 <p>至此，我们的博客就搭建成功了。</p>
@@ -410,7 +410,7 @@
 <p>前面我们成功搭建了一个博客，但这个博客是官方默认的例子。我们想要打造自己的博客，还需要进行一些定制。</p>
 </blockquote>
 <h3 id="基本定制"><a href="#基本定制" class="headerlink" title="基本定制"></a>基本定制</h3><p>我们需要修改博客目录下的<code>_config.yml</code>文件，如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 网站标题</span><br><span class="hljs-attr">title:</span> <span class="hljs-string">技术社区</span><br><span class="hljs-comment"># 副标题</span><br><span class="hljs-attr">subtitle:</span> <span class="hljs-string">好记性不如烂键盘</span><br><span class="hljs-comment"># 网站简介</span><br><span class="hljs-attr">description:</span> <span class="hljs-string">随便写写</span><br><span class="hljs-comment"># SEO 关键词（可选）</span><br><span class="hljs-attr">keywords:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">技术</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">Java</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">Spring</span><br><span class="hljs-comment"># 网站作者</span><br><span class="hljs-attr">author:</span> <span class="hljs-string">Hello</span> <span class="hljs-string">Kiti</span><br><span class="hljs-comment"># 网站语言，zh-CN: 简体中文</span><br><span class="hljs-attr">language:</span> <span class="hljs-string">zh-CN</span><br><span class="hljs-comment"># 时区（可选）</span><br><span class="hljs-attr">timezone:</span> <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 网站标题</span><br><span class="hljs-attr">title:</span> <span class="hljs-string">技术社区</span><br><span class="hljs-comment"># 副标题</span><br><span class="hljs-attr">subtitle:</span> <span class="hljs-string">好记性不如烂键盘</span><br><span class="hljs-comment"># 网站简介</span><br><span class="hljs-attr">description:</span> <span class="hljs-string">随便写写</span><br><span class="hljs-comment"># SEO 关键词（可选）</span><br><span class="hljs-attr">keywords:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">技术</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">Java</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">Spring</span><br><span class="hljs-comment"># 网站作者</span><br><span class="hljs-attr">author:</span> <span class="hljs-string">Hello</span> <span class="hljs-string">Kiti</span><br><span class="hljs-comment"># 网站语言，zh-CN: 简体中文</span><br><span class="hljs-attr">language:</span> <span class="hljs-string">zh-CN</span><br><span class="hljs-comment"># 时区（可选）</span><br><span class="hljs-attr">timezone:</span> <span class="hljs-string">&quot;&quot;</span><br></code></pre></td></tr></table></figure>
 
 <p>以上是部分需要修改的配置。</p>
 <p>配置修改完成后，重启项目刷新页面会看到如下界面：</p>
@@ -434,18 +434,18 @@
 <li><p>复制主题目录下的<code>_config.yml</code>到博客根目录并命令为<code>_config.fluid.yml</code>，注意不要将默认配置覆盖了。如果不放心可以先创建好文件，然后将主题的配置内容复制到新文件中。</p>
 </li>
 <li><p>修改<code>_config.yml</code>主配置文件，以下是要修改的内容：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 修改模版为 fluid</span><br><span class="hljs-attr">theme:</span> <span class="hljs-string">fluid</span><br></code></pre></td></tr></table></figure>
+ <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 修改模版为 fluid</span><br><span class="hljs-attr">theme:</span> <span class="hljs-string">fluid</span><br></code></pre></td></tr></table></figure>
 </li>
 <li><p>创建<code>关于页面</code></p>
-<p>Fluid 需要一个关于页面，这个页面在 Hexo 初始化的时候是没有的，需要手动创建。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">使用创建命令</span><br>hexo new page about<br></code></pre></td></tr></table></figure>
+<p> Fluid 需要一个关于页面，这个页面在 Hexo 初始化的时候是没有的，需要手动创建。</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">使用创建命令</span><br>hexo new page about<br></code></pre></td></tr></table></figure>
 
-<p>此时，Hexo 会在 source 目录下创建一个 about 目录，其中包含一个 index.md 的 Markdown 文件，这个文件就是我们的关于页面。</p>
-<p>创建后，修改内容如下：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs markdown">---<br>title: 标题<br><span class="hljs-section">layout: about</span><br><span class="hljs-section">---</span><br><br>这里写关于页的正文，支持 Markdown, HTML<br></code></pre></td></tr></table></figure>
+<p> 此时，Hexo 会在 source 目录下创建一个 about 目录，其中包含一个 index.md 的 Markdown 文件，这个文件就是我们的关于页面。</p>
+<p> 创建后，修改内容如下：</p>
+ <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs markdown">---<br>title: 标题<br><span class="hljs-section">layout: about</span><br><span class="hljs-section">---</span><br><br>这里写关于页的正文，支持 Markdown, HTML<br></code></pre></td></tr></table></figure>
 </li>
 <li><p>修改主题配置文件<code>_config.fluid.yml</code>，如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment">#---------------------------</span><br><span class="hljs-comment"># 页头</span><br><span class="hljs-comment"># Header</span><br><span class="hljs-comment">#---------------------------</span><br><br><span class="hljs-comment"># 导航栏的相关配置</span><br><span class="hljs-comment"># Navigation bar</span><br><span class="hljs-attr">navbar:</span><br>  <span class="hljs-comment"># 导航栏左侧的标题，为空则按 hexo config 中 `title` 显示</span><br>  <span class="hljs-comment"># The title on the left side of the navigation bar. If empty, it is based on `title` in hexo config</span><br>  <span class="hljs-attr">blog_title:</span> <span class="hljs-string">技术社区</span><br><br><span class="hljs-comment">#---------------------------</span><br><span class="hljs-comment"># 首页</span><br><span class="hljs-comment"># Home Page</span><br><span class="hljs-comment">#---------------------------</span><br><span class="hljs-attr">index:</span><br>  <span class="hljs-comment"># 首页副标题的独立设置</span><br>  <span class="hljs-comment"># Independent config of home page subtitle</span><br>  <span class="hljs-attr">slogan:</span><br>    <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br><br>    <span class="hljs-comment"># 网站副标题</span><br>    <span class="hljs-attr">text:</span> <span class="hljs-string">好记性不如烂键盘</span><br></code></pre></td></tr></table></figure></li>
+ <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><br><span class="hljs-comment">#---------------------------</span><br><span class="hljs-comment"># 页头</span><br><span class="hljs-comment"># Header</span><br><span class="hljs-comment">#---------------------------</span><br><br><span class="hljs-comment"># 导航栏的相关配置</span><br><span class="hljs-comment"># Navigation bar</span><br><span class="hljs-attr">navbar:</span><br>    <span class="hljs-comment"># 导航栏左侧的标题，为空则按 hexo config 中 `title` 显示</span><br>    <span class="hljs-comment"># The title on the left side of the navigation bar. If empty, it is based on `title` in hexo config</span><br>    <span class="hljs-attr">blog_title:</span> <span class="hljs-string">技术社区</span><br><br><span class="hljs-comment">#---------------------------</span><br><span class="hljs-comment"># 首页</span><br><span class="hljs-comment"># Home Page</span><br><span class="hljs-comment">#---------------------------</span><br><span class="hljs-attr">index:</span><br>    <span class="hljs-comment"># 首页副标题的独立设置</span><br>    <span class="hljs-comment"># Independent config of home page subtitle</span><br>    <span class="hljs-attr">slogan:</span><br>        <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br><br>        <span class="hljs-comment"># 网站副标题</span><br>        <span class="hljs-attr">text:</span> <span class="hljs-string">好记性不如烂键盘</span><br></code></pre></td></tr></table></figure></li>
 </ol>
 <p>配置完成后重启服务，此时的界面如下：</p>
 <p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304201242826.png" srcset="/img/loading.gif" lazyload alt="image-20230420124242767"></p>
@@ -455,7 +455,7 @@
 <p><strong>特别说明</strong></p>
 <p>_Markdown 无需插入图片的请跳过_。</p>
 <p>使用 Markdown 编写文档时，难免会用到一些图片。这些图片本地查看倒是没什么问题，如果放到公网环境就访问不到了。因此最好是将图片上传到某个地方，然后再链接进来。也可以直接使用图床。</p>
-<p>我平时使用的是 Typora 写文档，图床我用的是 PicGo + Git（Gitee 或 GitHub）。这里提一句，Gitee有防盗链，本地文件可以显示，但博客中无法显示。</p>
+<p>我平时使用的是 Typora 写文档，图床我用的是 PicGo + Git（Gitee 或 GitHub）。这里提一句，Gitee 有防盗链，本地文件可以显示，但博客中无法显示。</p>
 </blockquote>
 <h3 id="新建文章"><a href="#新建文章" class="headerlink" title="新建文章"></a>新建文章</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo new 这是我的第一篇文章<br></code></pre></td></tr></table></figure>
 
@@ -482,13 +482,13 @@
 <h3 id="创建-SSH-密钥"><a href="#创建-SSH-密钥" class="headerlink" title="创建 SSH 密钥"></a>创建 SSH 密钥</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ssh-keygen -t rsa -C &quot;&lt;GitHub注册时的邮箱&gt;&quot;<br></code></pre></td></tr></table></figure>
 
 <p>Windows 可以使用<code>Git Bash</code>工具。生成密钥时会有一些要填写的信息，一路回车就可以了。</p>
-<p>生成号之后，可以使用<code>cat ~/.ssh/id_rsa.pub</code>查看并复制公钥。</p>
-<h3 id="配置密钥到-GitHub"><a href="#配置密钥到-GitHub" class="headerlink" title="配置密钥到 GitHub"></a>配置密钥到 GitHub</h3><p>在 GitHub 页面点击头像，在下拉菜单中选择<code>Settings</code>。然后在左侧的列表中找到<code>SSH and GPG keys</code>，如果换名字了，可以找一下 SSH相关的选项。进入页面后点击<code>New SSH key</code>按钮来新建一个密钥。如图：</p>
+<p>生成好之后，可以使用<code>cat ~/.ssh/id_rsa.pub</code>查看并复制公钥。</p>
+<h3 id="配置密钥到-GitHub"><a href="#配置密钥到-GitHub" class="headerlink" title="配置密钥到 GitHub"></a>配置密钥到 GitHub</h3><p>在 GitHub 页面点击头像，在下拉菜单中选择<code>Settings</code>。然后在左侧的列表中找到<code>SSH and GPG keys</code>，如果换名字了，可以找一下 SSH 相关的选项。进入页面后点击<code>New SSH key</code>按钮来新建一个密钥。如图：</p>
 <p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304201403519.png" srcset="/img/loading.gif" lazyload alt="image-20230420133400602"></p>
 <ul>
 <li>Title：这里填写的是密钥的标题，便于我们区分各种密钥。标题最好用英文。</li>
 <li>Key type：密钥类型，默认就好。</li>
-<li>Key：密钥，此处填写的就是我们在本地生成号的密钥内容（上一步复制的）。</li>
+<li>Key：密钥，此处填写的就是我们在本地生成好的密钥内容（上一步复制的）。</li>
 </ul>
 <p>点击<code>Add SSH key</code>按钮，保存新密钥。</p>
 <h3 id="Hexo-部署配置"><a href="#Hexo-部署配置" class="headerlink" title="Hexo 部署配置"></a>Hexo 部署配置</h3><h4 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h4><blockquote>
@@ -605,8 +605,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/19/DockerCompose%E9%83%A8%E7%BD%B2Nacos%E9%9B%86%E7%BE%A4/" title="Docker Compose 部署 Nacos 集群">
-                        <span class="hidden-mobile">Docker Compose 部署 Nacos 集群</span>
+                      <a href="/2023/04/19/%E4%BD%BF%E7%94%A8Harbor%E6%90%AD%E5%BB%BADocker%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" title="使用Harbor搭建Docker私有仓库">
+                        <span class="hidden-mobile">使用Harbor搭建Docker私有仓库</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
