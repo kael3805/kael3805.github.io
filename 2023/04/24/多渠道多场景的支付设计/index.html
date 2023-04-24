@@ -1,0 +1,802 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="referrer" content="no-referrer">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kael">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="多渠道多场景的支付设计 在线支付是很多系统都常见的一种功能，几乎所有涉及到交易的系统都会用到支付，比如商城、各种平台的会员充值、外卖平台等。而我们日常生活中比较常用的支付方式莫过于微信或者支付宝，也有少部分场景会直接用到网银来支付。通常情况下，我们在开发一个带有支付功能的系统时，通常不会只对接一套支付系统。并且每一家的支付系统实现的方式、接口的标准等，几乎都不一样。这使得我们在开发和维护系统时，情">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多渠道多场景的支付设计">
+<meta property="og:url" content="https://kael.52dev.fun/2023/04/24/%E5%A4%9A%E6%B8%A0%E9%81%93%E5%A4%9A%E5%9C%BA%E6%99%AF%E7%9A%84%E6%94%AF%E4%BB%98%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="码农笔记">
+<meta property="og:description" content="多渠道多场景的支付设计 在线支付是很多系统都常见的一种功能，几乎所有涉及到交易的系统都会用到支付，比如商城、各种平台的会员充值、外卖平台等。而我们日常生活中比较常用的支付方式莫过于微信或者支付宝，也有少部分场景会直接用到网银来支付。通常情况下，我们在开发一个带有支付功能的系统时，通常不会只对接一套支付系统。并且每一家的支付系统实现的方式、接口的标准等，几乎都不一样。这使得我们在开发和维护系统时，情">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241007594.png">
+<meta property="article:published_time" content="2023-04-24T07:46:25.000Z">
+<meta property="article:modified_time" content="2023-04-24T07:56:26.797Z">
+<meta property="article:author" content="Kael">
+<meta property="article:tag" content="系统设计">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241007594.png">
+  
+  
+  
+  <title>多渠道多场景的支付设计 - 码农笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kael.52dev.fun","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>码农笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="多渠道多场景的支付设计"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-24 15:46" pubdate>
+          2023年4月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          110 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">多渠道多场景的支付设计</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="多渠道多场景的支付设计"><a href="#多渠道多场景的支付设计" class="headerlink" title="多渠道多场景的支付设计"></a>多渠道多场景的支付设计</h1><blockquote>
+<p>在线支付是很多系统都常见的一种功能，几乎所有涉及到交易的系统都会用到支付，比如商城、各种平台的会员充值、外卖平台等。而我们日常生活中比较常用的支付方式莫过于微信或者支付宝，也有少部分场景会直接用到网银来支付。通常情况下，我们在开发一个带有支付功能的系统时，通常不会只对接一套支付系统。并且每一家的支付系统实现的方式、接口的标准等，几乎都不一样。这使得我们在开发和维护系统时，情况变得复杂。</p>
+<p>除此之外，我们的系统中可能还涉及到多种支付场景，比如会员充值、购买商品、参加活动等，但这些场景在处理业务时又不尽相同。</p>
+</blockquote>
+<h2 id="支付设计的痛点"><a href="#支付设计的痛点" class="headerlink" title="支付设计的痛点"></a>支付设计的痛点</h2><p>针对开头我们提到的支付业务开发过程中遇到的问题，我们将问题大致罗列出以下几点：</p>
+<ol>
+<li>支付渠道比较多，而且各个第三方支付实现标准不统一，如接口参数、返回值、认证方式等。</li>
+<li>用户使用的支付终端不同，比如：电脑浏览器、手机浏览器、手机APP。这些不同的终端对应的支付实现也不完全相同。</li>
+<li>场景复杂，购买商品、会员充值等各种场景虽然都需要支付，但支付时的前置和后置处理不一样。比如购买商品时可能需要选择是否使用券、有没有满减活动等，而会员充值时又需要选择充值的标准，比如普通会员、白金会员等。</li>
+</ol>
+<p>针对这些问题，下面开始逐步拆解分析。</p>
+<h2 id="多渠道多终端"><a href="#多渠道多终端" class="headerlink" title="多渠道多终端"></a>多渠道多终端</h2><p>首先我们先看前两个问题，支付渠道多而且支持的终端不同，比如下面这张图：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241007594.png" srcset="/img/loading.gif" lazyload alt="image-20230424100750487"></p>
+<p>图中使用了两种支付渠道，分别是支付宝和微信，并且每种支付渠道又包含三种可选的支付终端。我们希望客户端在发起支付请求时，告诉服务端当前使用哪种支付渠道来支付，并且告诉服务端当前使用的终端是什么。这样服务端就可以根据这些信息去和第三方支付系统做适配。</p>
+<p>说到这里可能有人会说，这个简单，使用适配器模式，分别给支付宝和微信的三个终端各写一个适配，根据客户端传递过来的支付类型和终端类型选择对应的适配器来处理，然后使用工厂来创建适配器，不同的支付类型选择不同的适配器。最终我们的设计如下图所示：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241119645.png" srcset="/img/loading.gif" lazyload alt="image-20230424111959618"></p>
+<p>在这个设计中，我们先是抽象出一个接口，这个接口中统一业务的操作方法。由适配器来针对不同的终端来适配操作，最后使用工厂来针对不同的支付方式构建不同的适配器。这个设计看上去近乎完美，很好的解决了接口不统一的问题，上层业务只需要调用抽象接口的方法，适配器会自动的帮我们调用对应的适配对象来处理。</p>
+<p>但是，这其中还是有很多的问题存在，比如我们需要新增一个接口方法，此时，我们就需要将每一个适配器和适配对象都增加这个方法。再比如，我们需要增加新的终端类型（支付场景比较少见），那么就需要在适配器中新增一个适配对象。</p>
+<p>从上图中我们可以看到，适配对象与适配器之间是一种强关联关系，每个不同的终端都会有一个独立的对象存在，这显然违反了设计模式中的迪米特原则（即：最小知识原则）。另外，我们在实际对接的时候发现，有多接口并不区分终端类型，比如查询订单、取消订单等，那么这些具有相同操作的接口在每个终端中都需要实现一次，这显然也不符合设计模式的合成复用原则。</p>
+<p>由此可见，这个看似近乎完美的设计，实则漏洞百出。那么该如何进行优化呢？我们可以将问题进一步拆解分析。</p>
+<p>首先，我们先考虑我们在实现支付时都需要处理哪些业务：</p>
+<ol>
+<li>创建支付，完成一系列的校验、数据锁定及订单插入等操作，通知客户端唤起收银台；</li>
+<li>支付成功，完成一系列后续业务，比如：订单进入发货流程、给用户的充值到账等。</li>
+<li>取消支付，处理未支付的订单，接触数据锁定等。</li>
+<li>申请退款，处理已支付订单，退还用户款项。</li>
+<li>查询订单，获取订单信息。</li>
+</ol>
+<p>我们实际开发时，基本上能用到的也就这些方法。从这些业务中，我们可以看到，创建支付时需要唤起收银台，那么每个终端对于收银台的实现可能都不一样。因此，我们按照是否限定终端进行分组，可以得出以下结果。</p>
+<ul>
+<li>限定终端<ul>
+<li>创建支付</li>
+</ul>
+</li>
+<li>不限定终端<ul>
+<li>支付成功</li>
+<li>取消支付</li>
+<li>申请退款</li>
+<li>查询订单</li>
+</ul>
+</li>
+</ul>
+<p>除此之外，我们将每一种支付类型视为一个支付通道，比如用户选择支付宝，那么就走支付宝的通道，如果使用的是微信，那么就走微信通道。我们针对上面的适配器模式做个优化，在接口与实现类中间增加一个抽象，这个抽象用来实现那些具有相同行为的操作。如图：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241211128.png" srcset="/img/loading.gif" lazyload alt="image-20230424121132100"></p>
+<p>工厂类中，我们改用枚举来实现，如图：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241220676.png" srcset="/img/loading.gif" lazyload alt="image-20230424122057651"></p>
+<p>在此实现中，我们可以根据传入的通道类型和终端类型创建对应的支付实现。讲到这里可能有人会说，这也没啥改变，在工厂中一样还是强依赖关系，而且实现起来比适配器模式更加复杂了。那么好，我们看看优化后的设计比适配器模式好在哪里。</p>
+<p>首先，各支付接口中，具有相同行为的操作被提取到一个抽象类中，抽象类中实现了统一的行为操作处理。对于个性化的操作下沉到子类去实现，这样既保证了接口的完整性，又满足了合成复用原则。当有新的接口增加时，如果同样属于相同行为操作，那么只需要在抽象类中实现一次，则各子类中就拥有了相同的操作，而不需要给每个终端都写一个实现方法。</p>
+<p>对于抽象类和具体的实现而言，它并不知道当前用户使用了哪个终端来处理，这些都被封装到一个工厂中。而对于调用者而言，它只知道使用了哪种支付方式和使用哪种终端，至于具体使用哪个类来实现操作也是完全不知情的。因此，只有工厂是清楚的知道哪种支付类型和终端使用哪个实现。并且对于工厂而言，它只负责创建实例，至于执行那种行为操作它也是不知情的。这样，每个组件都各司其职，而对于其他组件所需要做的事情不做任何干涉。这不正满足了设计模式中的迪米特原则吗？</p>
+<p>这样，当我们后续需要对接新的支付系统时，只需要新增一个通道实现，然后给工厂增加一个选择器即可。当需要给通道新增接口时，只需要在对应的实现类中增加即可。</p>
+<h2 id="多场景支付"><a href="#多场景支付" class="headerlink" title="多场景支付"></a>多场景支付</h2><p>说完多渠道支付，我们再说说多场景支付，这在我们构建系统时也是经常会遇到的。比如我们现在要开发一个B2C商城，一开始我们只需要提供用户购买商品即可，但随着业务的发展。平台推行一种会员方案，普通用户没有折扣、VIP用户可以享受每单5折优惠。然而VIP不是随便可以获得的，需要用户每个月支付20元的会员费。</p>
+<p>针对这种场景，我们分析可得出，购买商品所需要的信息和会员充值所需要的信息是不一样的，如图：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241259490.png" srcset="/img/loading.gif" lazyload alt="image-20230424125919457"></p>
+<p>除此之外，购买商品和会员充值的后续业务处理也是不同的，比如商品购买成功后会进入配送流程，而会员充值，则只需要给用户标记为会员即可。讲到这里，可能有人会说，这个简单，前面支付渠道已经封装的很好了，我只需要给每个场景单独提供一套支付操作就可以了。这么说也没错，场景不同则实现也不同。但这里有一个问题，比如我们的支付修改了，之前是直接结算，现在需要在流程结束后统一结算，那么你该如何处理？再比如，我们之前的支付接口实现变了，你又该如何处理？</p>
+<p>如果是单一场景或只有一两个支付场景还好，如果系统中存在十几种甚至更多支付场景呢。那么就只能将每一个场景的支付部分的代码都修改一遍，这无疑是灾难性的。首先，修改这些代码可能会导致新的问题产生，对于已经测试上线的功能需要进行回测。第二，支付环节每一次的变化都需要修改一遍代码，因此复杂度为<code>O(n)</code>，n 即：每次变化需要修改的代码次数。</p>
+<p>那么有没有什么好的办法来解决这个问题呢？答案是肯定有的。那么好，我们针对上面的场景来进行分析，首先我们先分析一下，所有的支付场景都有哪些共同点。</p>
+<ol>
+<li>发起支付请求；</li>
+<li>支付成功处理；</li>
+<li>取消支付；</li>
+<li>申请退款；</li>
+</ol>
+<p>看到这里是不是感觉到有点儿眼熟，对的，它和我们在设计支付时几乎是一样的。区别是我们在设计支付时，它所对应的目标对象是第三方支付系统，换句话说，我们的支付设计更像是一个代理，我们所有的针对第三方支付系统的操作都交由支付通道来代为处理，将业务与第三方支付隔离。</p>
+<p>而支付场景所对应的目标是我们的业务系统，从计算机的角度而言，每一个业务场景都是一组计算，只不过场景不同而导致算法不同而已，这里的算法可以理解为业务流程。针对不同场景选择不同的算法，这让我们想到设计模式中的策略模式。</p>
+<p>策略模式通俗点来说就是对象的某个行为在不同的场景下可以有不同的处理方式。例如我们可以用嘴巴来吃东西、喝水、呼吸，如果你是在喝水，那么你可以选择用勺子、杯子、吸管等，如果你在吃东西，那么你可以选择用筷子、用手抓，如果你是在呼吸，那么你什么都不需要用，只要张嘴喘气即可。同样是嘴巴，同样是往身体里面进东西，但场景不一样所需要的处理也不一样。</p>
+<p>我们针对上面的场景，结合策略模式设计，如下图所示：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241348700.png" srcset="/img/loading.gif" lazyload alt="image-20230424134831668"></p>
+<p>图中，我们先是定义了一个交易策略的接口，然后分别针对购买商品和会员充值两个场景添加了对应的实现。交易上下文也就是我们统一处理业务的类，上下文中需要针对不同场景设置相应的策略，对于上下文而言，只需要调用策略的方法来完成功能，无需知道使用的是哪种策略。我们可以在上下文中调用支付通道来完成相应的支付操作，而具体的业务则交由策略实现来处理。当支付发生变化时，我们只需要对上下文进行修改即可，修改完成后，我们只需要测试某一场景的流程是否正确即可。当一个场景测试通过时，则其他场景全部通过。此时的复杂度为<code>O(1)</code>，即每一次的变化只修改一次上下文即可。</p>
+<p>讲到这里，设计还没有结束，按照上面的设计，虽然可以解决场景问题，但是它和支付一样，也会有相同的操作存在。回顾我们之前粗暴的实现支付时，每一笔支付，无论是哪种场景都需要在业务系统中记录一个订单，后续所有的操作都会基于这个订单来处理。那么往数据库中插入订单就是每个场景都需要做的。</p>
+<p>根据我们之前设计支付时的经验，当业务中既有相同行为操作又有个性化行为操作时，我们的做法是进一步抽象，将个性化操作下沉到子类实现，而通用操作交由抽象类来做。我们修改上面的设计如下图所示：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241409685.png" srcset="/img/loading.gif" lazyload alt="image-20230424140926649"></p>
+<p>图中，我们将插入订单操作提取到一个抽象类中，并且设置为受保护方法，因为我们只希望子类去调用，而对于策略的调用者来说是不允许直接插入订单的。为了减少修改，我们同样适用工厂来实现策略的创建，不同的是，这一次我们使用枚举工厂，也就是将每一个策略绑定到一个枚举项上面，通过传入不同的枚举，我们就可以调用不同的策略，如图：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241505724.png" srcset="/img/loading.gif" lazyload alt="image-20230424150511694"></p>
+<h2 id="设计融合"><a href="#设计融合" class="headerlink" title="设计融合"></a>设计融合</h2><blockquote>
+<p>面前我们已经设计好了多渠道支付和多场景支付，此时两个设计还是各自独立的。我们需要将这些设计融合在一起。</p>
+</blockquote>
+<p>最终完成的设计如图所示：</p>
+<p><img src="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304241506024.png" srcset="/img/loading.gif" lazyload alt="image-20230424150614985"></p>
+<p>针对此设计图，下面我们开始组织代码。</p>
+<h3 id="支付通道代码实现"><a href="#支付通道代码实现" class="headerlink" title="支付通道代码实现"></a>支付通道代码实现</h3><p><code>PayChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付通道接口</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">PayChannel</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取支付通道ID</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 返回通道ID</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">int</span> <span class="hljs-title function_">getChannelId</span><span class="hljs-params">()</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建支付</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> param 支付参数</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 返回收银台地址</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">createOrder</span><span class="hljs-params">(Object param)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 查询订单</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> param 查询参数</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 返回订单信息</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">queryOrder</span><span class="hljs-params">(Object param)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 取消订单</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> param 取消参数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">cancelOrder</span><span class="hljs-params">(Object param)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 申请退款</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> param 申请参数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyForRefund</span><span class="hljs-params">(Object param)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>AbstractAlipayChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付宝通道</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AbstractAlipayChannel</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">PayChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getChannelId</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> PayChannelType.ALIPAY.getId();<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">queryOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;查询支付宝订单&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;支付宝订单信息&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">cancelOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;取消支付宝订单&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyForRefund</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;申请支付宝退款&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>AlipayPcChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付宝 PC 端支付</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AlipayPcChannel</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractAlipayChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">createOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;支付宝 PC 收银台&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>AlipayWapChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付宝 Wap 端支付</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AlipayWapChannel</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractAlipayChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">createOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;支付宝 Wap 收银台&quot;</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p><code>AlipayAppChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付宝 App 端支付</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AlipayAppChannel</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractAlipayChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">createOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;支付宝 App 收银台&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>AbstractWechatChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 微信通道</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AbstractWechatChannel</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">PayChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getChannelId</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> PayChannelType.WECHAT.getId();<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">queryOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;查询微信订单&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;微信订单信息&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">cancelOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;取消微信订单&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyForRefund</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;申请微信退款&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>WechatPcChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 微信 PC 端支付</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WechatPcChannel</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractWechatChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">createOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;微信 PC 收银台&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>WechatWapChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 微信 Wap 端支付</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WechatWapChannel</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractWechatChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">createOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;微信 Wap 收银台&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>WechatAppChannel</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 微信 App 端支付</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WechatAppChannel</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractWechatChannel</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">createOrder</span><span class="hljs-params">(Object param)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;微信 App 收银台&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>PayChannelType</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付通道类型</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">PayChannelType</span> &#123;<br>    <span class="hljs-comment">// 支付宝</span><br>    ALIPAY(<span class="hljs-number">1</span>),<br>    <span class="hljs-comment">// 微信支付</span><br>    WECHAT(<span class="hljs-number">2</span>);<br><br>    <span class="hljs-comment">// 通道ID</span><br>    <span class="hljs-keyword">private</span> Integer id;<br><br>    PayChannelType(Integer id) &#123;<br>        <span class="hljs-built_in">this</span>.id = id;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> Integer <span class="hljs-title function_">getId</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.id;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>PayTerminal</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付终端</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">PayTerminal</span> &#123;<br>    <span class="hljs-comment">// 电脑浏览器</span><br>    PC,<br>    <span class="hljs-comment">// 手机浏览器</span><br>    WAP,<br>    <span class="hljs-comment">// 手机APP</span><br>    APP;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>PayChannelFactory</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付通道工厂</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PayChannelFactory</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 构造支付通道</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> channelType 支付通道类型</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> terminal 支付终端</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> PayChannel <span class="hljs-title function_">builder</span><span class="hljs-params">(PayChannelType channelType, PayTerminal terminal)</span> &#123;<br>        PayChannel channel;<br>        <span class="hljs-keyword">switch</span> (channelType) &#123;<br>            <span class="hljs-keyword">case</span> ALIPAY -&gt; &#123;<br>                <span class="hljs-keyword">switch</span> (terminal) &#123;<br>                    <span class="hljs-keyword">case</span> PC -&gt; channel = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AlipayPcChannel</span>();<br>                    <span class="hljs-keyword">case</span> WAP -&gt; channel = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AlipayWapChannel</span>();<br>                    <span class="hljs-keyword">case</span> APP -&gt; channel = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AlipayAppChannel</span>();<br>                    <span class="hljs-keyword">default</span> -&gt; channel = <span class="hljs-literal">null</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">case</span> WECHAT -&gt; &#123;<br>                <span class="hljs-keyword">switch</span> (terminal) &#123;<br>                    <span class="hljs-keyword">case</span> PC -&gt; channel = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WechatPcChannel</span>();<br>                    <span class="hljs-keyword">case</span> WAP -&gt; channel = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WechatWapChannel</span>();<br>                    <span class="hljs-keyword">case</span> APP -&gt; channel = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WechatAppChannel</span>();<br>                    <span class="hljs-keyword">default</span> -&gt; channel = <span class="hljs-literal">null</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">default</span> -&gt; channel = <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> channel;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="交易策略代码实现"><a href="#交易策略代码实现" class="headerlink" title="交易策略代码实现"></a>交易策略代码实现</h3><p><code>TransactionStrategy</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 交易策略</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">TransactionStrategy</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生成交易订单号</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 返回订单号</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">generateOutTradeNo</span><span class="hljs-params">()</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建交易</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> param 交易参数</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 返回交易信息</span><br><span class="hljs-comment">     */</span><br>    String <span class="hljs-title function_">create</span><span class="hljs-params">(Object param)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 确认支付</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> outTradeNo 交易订单号</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">success</span><span class="hljs-params">(String outTradeNo)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 取消支付</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> outTradeNo 交易订单号</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">cancel</span><span class="hljs-params">(String outTradeNo)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>AbstractTransaction</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 抽象交易</span><br><span class="hljs-comment"> * 用途：抽取交易策略中的同类操作</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AbstractTransaction</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">TransactionStrategy</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 添加支付订单</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> params 订单参数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addPayOrder</span><span class="hljs-params">(Object params)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;向数据库插入支付订单&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>CommodityTransaction</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 商品交易</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CommodityTransaction</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractTransaction</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">generateOutTradeNo</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> TransactionType.COMMODITY.name() + <span class="hljs-string">&quot;_&quot;</span> + System.currentTimeMillis();<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">create</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;购买商品：&quot;</span> + param);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">outTradeNo</span> <span class="hljs-operator">=</span> generateOutTradeNo();<br>        System.out.println(<span class="hljs-string">&quot;订单号：&quot;</span> + outTradeNo);<br>        <span class="hljs-built_in">super</span>.addPayOrder(param);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;创建商品交易&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">success</span><span class="hljs-params">(String outTradeNo)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;商品交易成功&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">cancel</span><span class="hljs-params">(String outTradeNo)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;商品交易取消&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>RechargeTransaction</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 会员充值</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RechargeTransaction</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractTransaction</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">generateOutTradeNo</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> TransactionType.RECHARGE.name() + <span class="hljs-string">&quot;_&quot;</span> + System.currentTimeMillis();<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">create</span><span class="hljs-params">(Object param)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;会员充值：&quot;</span> + param);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">outTradeNo</span> <span class="hljs-operator">=</span> generateOutTradeNo();<br>        System.out.println(<span class="hljs-string">&quot;订单号：&quot;</span> + outTradeNo);<br>        <span class="hljs-built_in">super</span>.addPayOrder(param);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;创建会员充值&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">success</span><span class="hljs-params">(String outTradeNo)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;会员充值成功&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">cancel</span><span class="hljs-params">(String outTradeNo)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;会员充值取消&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>TransactionType</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 交易类型</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">TransactionType</span> &#123;<br>    <span class="hljs-comment">// 商品交易</span><br>    COMMODITY(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CommodityTransaction</span>()),<br>    <span class="hljs-comment">// 会员充值</span><br>    RECHARGE(<span class="hljs-keyword">new</span> <span class="hljs-title class_">RechargeTransaction</span>());<br><br>    <span class="hljs-keyword">private</span> TransactionStrategy strategy;<br><br>    TransactionType(TransactionStrategy strategy) &#123;<br>        <span class="hljs-built_in">this</span>.strategy = strategy;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> TransactionStrategy <span class="hljs-title function_">getStrategy</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.strategy;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>TransactionContext</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 交易上下文</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TransactionContext</span> &#123;<br>    <span class="hljs-comment">// 交易策略</span><br>    <span class="hljs-keyword">private</span> TransactionStrategy strategy;<br>    <span class="hljs-comment">// 支付通道</span><br>    <span class="hljs-keyword">private</span> PayChannel channel;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 设置交易策略</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> transactionType 策略类型</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setStrategy</span><span class="hljs-params">(TransactionType transactionType)</span> &#123;<br>        <span class="hljs-built_in">this</span>.strategy = transactionType.getStrategy();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setChannel</span><span class="hljs-params">(PayChannelType channelType, PayTerminal terminal)</span> &#123;<br>        <span class="hljs-built_in">this</span>.channel = PayChannelFactory.builder(channelType, terminal);<br>    &#125;<br><br>    <span class="hljs-comment">/***</span><br><span class="hljs-comment">     * 创建交易</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> param 交易参数</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 返回创建结果</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">create</span><span class="hljs-params">(Object param)</span> &#123;<br>        strategy.create(param);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> channel.createOrder(<span class="hljs-string">&quot;&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;打开&quot;</span> + result);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;创建商品交易&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 支付成功</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> outTradeNo 商户订单号</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">success</span><span class="hljs-params">(String outTradeNo)</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> channel.queryOrder(outTradeNo);<br>        <span class="hljs-keyword">if</span> (result != <span class="hljs-literal">null</span>) &#123;<br>            strategy.success(outTradeNo);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;交易失败&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 取消交易</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> outTradeNo 商户订单号</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">cancel</span><span class="hljs-params">(String outTradeNo)</span> &#123;<br>        channel.cancelOrder(outTradeNo);<br>        strategy.cancel(outTradeNo);<br>        System.out.println(<span class="hljs-string">&quot;商品交易取消&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>最后，我们开始对上面的实现进行组装测试。</p>
+<p><code>PayTest</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 支付测试</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> kael</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PayTest</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;\n---------- 购买商品 ----------&quot;</span>);<br>        <span class="hljs-type">TransactionContext</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TransactionContext</span>();<br>        context.setStrategy(TransactionType.COMMODITY);<br>        context.setChannel(PayChannelType.ALIPAY, PayTerminal.PC);<br>        <span class="hljs-comment">// 创建支付</span><br>        context.create(<span class="hljs-string">&quot;自行车&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;等待用户付款...........&quot;</span>);<br>        <span class="hljs-comment">// 确认支付</span><br>        context.success(<span class="hljs-string">&quot;&quot;</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;\n---------- 会员充值 ----------&quot;</span>);<br>        context = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TransactionContext</span>();<br>        context.setStrategy(TransactionType.RECHARGE);<br>        context.setChannel(PayChannelType.WECHAT, PayTerminal.APP);<br>        <span class="hljs-comment">// 创建支付</span><br>        context.create(<span class="hljs-string">&quot;白金会员&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;等待用户付款...........&quot;</span>);<br>        <span class="hljs-comment">// 确认支付</span><br>        context.success(<span class="hljs-string">&quot;&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试案例中，我们模拟一个购买商品、一个会员充值，并且两种场景分别使用支付宝的PC支付和微信的APP支付。代码执行后，返回结果如下：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs lasso">-- console <span class="hljs-keyword">log</span> --<br><br>---------- 购买商品 ----------<br>购买商品：自行车<br>订单号：COMMODITY_1682321282696<br>向数据库插入支付订单<br>打开支付宝 PC 收银台<br>等待用户付款<span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span>..<br>查询支付宝订单<br>商品交易成功<br><br>---------- 会员充值 ----------<br>会员充值：白金会员<br>订单号：RECHARGE_1682321282707<br>向数据库插入支付订单<br>打开微信 App 收银台<br>等待用户付款<span class="hljs-params">...</span><span class="hljs-params">...</span><span class="hljs-params">...</span>..<br>查询微信订单<br>会员充值成功<br></code></pre></td></tr></table></figure>
+
+<p>从执行结果上来看，我们完全可以根据不同的参数来进行不同场景不同渠道的支付组合。</p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><blockquote>
+<p>这个设计可能不是最完美的，但基本解决了我们一开始所遇到的问题。正所谓优化无止境，无论何时你可能总会找到一个更好的设计。</p>
+<p>通过这个设计案例，我们会发现：</p>
+<ul>
+<li>设计是循序渐进的，我们必须由浅入深逐步细化，不要想着能够一步到位。</li>
+<li>实际的软件设计过程中，对于设计模式的运用往往不是某一个单一模式能够解决的。大部分情况下需要多种设计模式进行组合，设计过程尽可能的遵循设计模式基本原则。</li>
+<li>复杂的业务设计建议使用图和伪代码来进行推导，以此来检验我们在设计上的可行性。</li>
+<li>设计被实践之后需要及时记录文档，通过实践，我们已经检验了设计的可行性和稳定性。完整的设计需要及时的记录文档，一方面是当其他人接手时可以迅速的了解设计，另一方面是将来我们遇到同样的场景时可以拿来参考。</li>
+</ul>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" class="category-chain-item">系统设计</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">#系统设计</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>多渠道多场景的支付设计</div>
+      <div>https://kael.52dev.fun/2023/04/24/多渠道多场景的支付设计/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kael</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              BY (KAEL)
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/21/Elastic%20Search%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Elasticsearch 学习笔记">
+                        <span class="hidden-mobile">Elasticsearch 学习笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div><b>码农卡尔的笔记</b></div> <div>联系邮箱: kael3805@gmail.com</div> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
