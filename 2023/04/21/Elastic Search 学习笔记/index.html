@@ -26,12 +26,15 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304210935440.jpeg">
 <meta property="article:published_time" content="2023-04-21T01:31:25.000Z">
-<meta property="article:modified_time" content="2023-04-21T01:47:36.726Z">
+<meta property="article:modified_time" content="2023-04-28T06:05:12.540Z">
 <meta property="article:author" content="Kael">
 <meta property="article:tag" content="Elasticsearch">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://gitee.com/carl-d/blogimage/raw/master/docimage/202304210935440.jpeg">
   
+  
+    <!-- <meta name="referrer" content="no-referrer-when-downgrade"> -->
+    <meta name="referrer" content="no-referrer">
   
   
   <title>Elasticsearch 学习笔记 - 码农笔记</title>
@@ -66,6 +69,10 @@
     <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
+
+
+  
+<link rel="stylesheet" href="/css/mac.css">
 
 
 
@@ -256,6 +263,14 @@
 
     
     
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
   </div>
 
 
@@ -378,7 +393,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker ps -a<br></code></pre></td></tr></table></figure>
 
 <p>命令执行结果如下：</p>
-<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xl">-- console <span class="hljs-built_in">log</span> --<br>CONTAINER ID   IMAGE                       COMMAND                  CREATED          STATUS          PORTS                                                                                  NAMES<br><span class="hljs-number">3277</span><span class="hljs-function"><span class="hljs-title">e5f102ab</span>   elasticsearch:7.17.7        &quot;/tini -- /usr/local…&quot;   18 seconds ago   Up 13 seconds   0.0.0.0:9200-&gt;</span><span class="hljs-number">9200</span>/<span class="hljs-function"><span class="hljs-title">tcp</span>, :::9200-&gt;</span><span class="hljs-number">9200</span>/<span class="hljs-function"><span class="hljs-title">tcp</span>, 0.0.0.0:9300-&gt;</span><span class="hljs-number">9300</span>/<span class="hljs-function"><span class="hljs-title">tcp</span>, :::9300-&gt;</span><span class="hljs-number">9300</span>/tcp   elasticsearch<br></code></pre></td></tr></table></figure>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs console">-- console log --<br>CONTAINER ID   IMAGE                       COMMAND                  CREATED          STATUS          PORTS                                                                                  NAMES<br>3277e5f102ab   elasticsearch:7.17.7        &quot;/tini -- /usr/local…&quot;   18 seconds ago   Up 13 seconds   0.0.0.0:9200-&gt;9200/tcp, :::9200-&gt;9200/tcp, 0.0.0.0:9300-&gt;9300/tcp, :::9300-&gt;9300/tcp   elasticsearch<br></code></pre></td></tr></table></figure>
 </li>
 <li><p>进入容器</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker exec -it &lt;容器ID&gt; /bin/bash<br></code></pre></td></tr></table></figure>
@@ -387,7 +402,7 @@
 <ul>
 <li><p>查询目录所属用户</p>
 <p>使用<code>ll</code>命令查看当前目录，返回如下信息</p>
-<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs tap">-- console log --<br>drwxrwxr-x <span class="hljs-number"> 1 </span>root          root    <span class="hljs-number"> 58 </span>Mar<span class="hljs-number"> 24 </span>02:33 ./<br>drwxr-xr-x <span class="hljs-number"> 1 </span>root          root    <span class="hljs-number"> 27 </span>Jan<span class="hljs-number"> 31 </span>05:40 ../<br>-rw-r--r-- <span class="hljs-number"> 1 </span>root          root   <span class="hljs-number"> 220 </span>Jan<span class="hljs-number"> 31 </span>05:40 .bash_logout<br>-rw-r--r-- <span class="hljs-number"> 1 </span>root          root  <span class="hljs-number"> 3771 </span>Jan<span class="hljs-number"> 31 </span>05:40 .bashrc<br>drwxrwxr-x <span class="hljs-number"> 3 </span>elasticsearch root    <span class="hljs-number"> 17 </span>Mar<span class="hljs-number"> 24 </span>02:33 .cache/<br>-rw-r--r-- <span class="hljs-number"> 1 </span>root          root   <span class="hljs-number"> 807 </span>Jan<span class="hljs-number"> 31 </span>05:40 .profile<br>-r--r--r-- <span class="hljs-number"> 1 </span>root          root  <span class="hljs-number"> 3860 </span>Jan<span class="hljs-number"> 31 </span>05:33 LICENSE.txt<br>-r--r--r-- <span class="hljs-number"> 1 </span>root          root<span class="hljs-number"> 642830 </span>Jan<span class="hljs-number"> 31 </span>05:35 NOTICE.txt<br>-r--r--r-- <span class="hljs-number"> 1 </span>root          root  <span class="hljs-number"> 2710 </span>Jan<span class="hljs-number"> 31 </span>05:33 README.asciidoc<br>drwxrwxr-x <span class="hljs-number"> 1 </span>elasticsearch root     <span class="hljs-number"> 6 </span>Jan<span class="hljs-number"> 31 </span>05:39 bin/<br>drwxrwxr-x <span class="hljs-number"> 1 </span>elasticsearch root    <span class="hljs-number"> 36 </span>Mar<span class="hljs-number"> 24 </span>02:33 config/<br>drwxrwxr-x <span class="hljs-number"> 1 </span>elasticsearch root    <span class="hljs-number"> 19 </span>Mar<span class="hljs-number"> 24 </span>02:33 data/<br>dr-xr-xr-x <span class="hljs-number"> 1 </span>root          root    <span class="hljs-number"> 17 </span>Jan<span class="hljs-number"> 31 </span>05:38 jdk/<br>dr-xr-xr-x <span class="hljs-number"> 3 </span>root          root  <span class="hljs-number"> 4096 </span>Jan<span class="hljs-number"> 31 </span>05:38 lib/<br>drwxrwxr-x <span class="hljs-number"> 1 </span>elasticsearch root    <span class="hljs-number"> 37 </span>Mar<span class="hljs-number"> 24 </span>02:33 logs/<br>dr-xr-xr-x<span class="hljs-number"> 61 </span>root          root  <span class="hljs-number"> 4096 </span>Jan<span class="hljs-number"> 31 </span>05:38 modules/<br>drwxrwxr-x <span class="hljs-number"> 1 </span>elasticsearch root     <span class="hljs-number"> 6 </span>Jan<span class="hljs-number"> 31 </span>05:35 plugins/<br></code></pre></td></tr></table></figure>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs console">-- console log --<br>drwxrwxr-x  1 root          root     58 Mar 24 02:33 ./<br>drwxr-xr-x  1 root          root     27 Jan 31 05:40 ../<br>-rw-r--r--  1 root          root    220 Jan 31 05:40 .bash_logout<br>-rw-r--r--  1 root          root   3771 Jan 31 05:40 .bashrc<br>drwxrwxr-x  3 elasticsearch root     17 Mar 24 02:33 .cache/<br>-rw-r--r--  1 root          root    807 Jan 31 05:40 .profile<br>-r--r--r--  1 root          root   3860 Jan 31 05:33 LICENSE.txt<br>-r--r--r--  1 root          root 642830 Jan 31 05:35 NOTICE.txt<br>-r--r--r--  1 root          root   2710 Jan 31 05:33 README.asciidoc<br>drwxrwxr-x  1 elasticsearch root      6 Jan 31 05:39 bin/<br>drwxrwxr-x  1 elasticsearch root     36 Mar 24 02:33 config/<br>drwxrwxr-x  1 elasticsearch root     19 Mar 24 02:33 data/<br>dr-xr-xr-x  1 root          root     17 Jan 31 05:38 jdk/<br>dr-xr-xr-x  3 root          root   4096 Jan 31 05:38 lib/<br>drwxrwxr-x  1 elasticsearch root     37 Mar 24 02:33 logs/<br>dr-xr-xr-x 61 root          root   4096 Jan 31 05:38 modules/<br>drwxrwxr-x  1 elasticsearch root      6 Jan 31 05:35 plugins/<br></code></pre></td></tr></table></figure>
 
 <p>这里主要关注三个重要的信息，config、data、logs 这三个目录的所属用户是<code>elasticsearch</code>。这里是个大坑，后面我们在编排服务时，挂载目录的所属用户要和这里的所属用户保持一致，否则启动会提示权限错误。</p>
 </li>
@@ -395,7 +410,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">id elasticsearch<br></code></pre></td></tr></table></figure>
 
 <p>命令返回结果如下：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">--<span class="hljs-built_in"> console </span>log --<br><span class="hljs-attribute">uid</span>=1000(elasticsearch) <span class="hljs-attribute">gid</span>=1000(elasticsearch) <span class="hljs-attribute">groups</span>=1000(elasticsearch),0(root)<br></code></pre></td></tr></table></figure>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs console">-- console log --<br>uid=1000(elasticsearch) gid=1000(elasticsearch) groups=1000(elasticsearch),0(root)<br></code></pre></td></tr></table></figure>
 
 <p>这里的 uid 的值是 1000，这个值一定要记好。后面会用到这个值。</p>
 </li>
@@ -403,7 +418,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">pwd<br></code></pre></td></tr></table></figure>
 
 <p>命令返回结果如下：</p>
-<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arcade">-- <span class="hljs-built_in">console</span> <span class="hljs-built_in">log</span> --<br><span class="hljs-regexp">/usr/</span>share/elasticsearch<br></code></pre></td></tr></table></figure>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs console">-- console log --<br>/usr/share/elasticsearch<br></code></pre></td></tr></table></figure>
 
 <p>这个路径也要记录下来，后面也会用到。确定好路径之后，可以使用<code>exit</code>命令退出容器。</p>
 </li>
@@ -483,7 +498,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">有些容器不能使用 ll 命令，如果不能用，可以使用 <span class="hljs-built_in">ls</span> -l</span><br>ls -l<br></code></pre></td></tr></table></figure>
 
 <p>命令执行结果如下：</p>
-<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs tap">-- console log --<br>total 1152<br>-rw-rw-r--  <span class="hljs-number"> 1 </span>kibana root   <span class="hljs-number"> 3860 </span>Jan<span class="hljs-number"> 30 </span>12:30 LICENSE.txt<br>-rw-rw-r--  <span class="hljs-number"> 1 </span>kibana root<span class="hljs-number"> 1128786 </span>Jan<span class="hljs-number"> 30 </span>12:30 NOTICE.txt<br>-rw-rw-r--  <span class="hljs-number"> 1 </span>kibana root   <span class="hljs-number"> 3970 </span>Jan<span class="hljs-number"> 30 </span>12:30 README.txt<br>drwxrwxr-x  <span class="hljs-number"> 2 </span>kibana root     <span class="hljs-number"> 94 </span>Jan<span class="hljs-number"> 30 </span>12:30 bin<br>drwxrwxr-x  <span class="hljs-number"> 1 </span>kibana root     <span class="hljs-number"> 24 </span>Jan<span class="hljs-number"> 30 </span>12:44 config<br>drwxrwxr-x  <span class="hljs-number"> 1 </span>kibana root     <span class="hljs-number"> 18 </span>Mar<span class="hljs-number"> 24 </span>04:10 data<br>drwxrwxr-x  <span class="hljs-number"> 6 </span>kibana root    <span class="hljs-number"> 108 </span>Jan<span class="hljs-number"> 30 </span>12:30 node<br>drwxrwxr-x<span class="hljs-number"> 682 </span>kibana root  <span class="hljs-number"> 20480 </span>Jan<span class="hljs-number"> 30 </span>12:30 node_modules<br>-rw-rw-r--  <span class="hljs-number"> 1 </span>kibana root    <span class="hljs-number"> 740 </span>Jan<span class="hljs-number"> 30 </span>12:30 package.json<br>drwxrwxr-x  <span class="hljs-number"> 2 </span>kibana root      <span class="hljs-number"> 6 </span>Jan<span class="hljs-number"> 30 </span>12:30 plugins<br>drwxrwxr-x  <span class="hljs-number"> 9 </span>kibana root    <span class="hljs-number"> 131 </span>Jan<span class="hljs-number"> 30 </span>12:30 src<br>drwxrwxr-x  <span class="hljs-number"> 3 </span>kibana root     <span class="hljs-number"> 79 </span>Jan<span class="hljs-number"> 30 </span>12:30 x-pack<br></code></pre></td></tr></table></figure>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs console">-- console log --<br>total 1152<br>-rw-rw-r--   1 kibana root    3860 Jan 30 12:30 LICENSE.txt<br>-rw-rw-r--   1 kibana root 1128786 Jan 30 12:30 NOTICE.txt<br>-rw-rw-r--   1 kibana root    3970 Jan 30 12:30 README.txt<br>drwxrwxr-x   2 kibana root      94 Jan 30 12:30 bin<br>drwxrwxr-x   1 kibana root      24 Jan 30 12:44 config<br>drwxrwxr-x   1 kibana root      18 Mar 24 04:10 data<br>drwxrwxr-x   6 kibana root     108 Jan 30 12:30 node<br>drwxrwxr-x 682 kibana root   20480 Jan 30 12:30 node_modules<br>-rw-rw-r--   1 kibana root     740 Jan 30 12:30 package.json<br>drwxrwxr-x   2 kibana root       6 Jan 30 12:30 plugins<br>drwxrwxr-x   9 kibana root     131 Jan 30 12:30 src<br>drwxrwxr-x   3 kibana root      79 Jan 30 12:30 x-pack<br></code></pre></td></tr></table></figure>
 </li>
 <li><p>查看目录的完整路径</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">pwd<br></code></pre></td></tr></table></figure>
@@ -862,7 +877,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">elasticsearch-plugin list<br></code></pre></td></tr></table></figure>
 
 <p>命令执行结果如下：</p>
-<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arcade">-- <span class="hljs-built_in">console</span> <span class="hljs-built_in">log</span> --<br>ik<br></code></pre></td></tr></table></figure>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs console">-- console log --<br>ik<br></code></pre></td></tr></table></figure>
 
 <p>到这里可以看到，已经安装了一个 ik 插件。</p>
 </li>
@@ -1076,6 +1091,30 @@
     </div>
   
   
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
   
   
 </div>
@@ -1221,6 +1260,8 @@
   <script>Fluid.plugins.imageCaption();</script>
 
   <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
